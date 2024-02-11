@@ -83,50 +83,6 @@ public class BooksControllerTest {
 				.getContentAsString(), false);
 	}
 	
-//	@Test
-//	public void createUser() throws Exception {
-//		Boo requestUserDto = new UserDto();
-//		requestUserDto.setName("user1");
-//		requestUserDto.setRoles(new HashSet<RoleDto>());
-//
-//		RoleDto requestRoleDto = new RoleDto();
-//		requestRoleDto.setName("role1");
-//
-//		requestUserDto.getRoles().add(requestRoleDto);
-//
-//		UserDto reponseUserDto = new UserDto();
-//		reponseUserDto.setName("user1");
-//		reponseUserDto.setRoles(new HashSet<RoleDto>());
-//		reponseUserDto.setId(1);
-//
-//		RoleDto responseRoleDto = new RoleDto();
-//		responseRoleDto.setName("role1");
-//		responseRoleDto.setId(1);
-//
-//		reponseUserDto.getRoles().add(responseRoleDto);
-//
-//
-//
-//
-//		Mockito.when(userService.createUser(requestUserDto)).thenReturn(reponseUserDto);
-//
-//		ObjectMapper objectMapper = new ObjectMapper();
-//
-//		RequestBuilder requestBuilder = MockMvcRequestBuilders
-//				.post("/users")
-//				.accept(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(requestUserDto) )
-//				.contentType(MediaType.APPLICATION_JSON);
-//
-//		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-//
-//		MockHttpServletResponse response = result.getResponse();
-////		String x = response.getContentAsString();
-//
-//		assertEquals(HttpStatus.OK.value(), response.getStatus());
-//
-//	}
-
 
 
 }
