@@ -23,18 +23,22 @@ public class DemoApplication implements CommandLineRunner {
 		BookModel bookModel = new BookModel();
 		bookModel.setName("name1");
 		bookModel.setCategory("category1");
+		bookModel.setAvailable(true);
 
 		BookModel bookModel2 = new BookModel();
 		bookModel2.setName("name2");
 		bookModel2.setCategory("category1");
+		bookModel2.setAvailable(false);
 
 		BookModel bookModel3 = new BookModel();
 		bookModel3.setName("name3");
 		bookModel3.setCategory("category2");
+		bookModel3.setAvailable(true);
 
 		BookModel bookModel4 = new BookModel();
 		bookModel4.setName("name4");
 		bookModel4.setCategory("category3");
+		bookModel4.setAvailable(true);
 
 		bookService.addBook(bookModel);
 		bookService.addBook(bookModel2);

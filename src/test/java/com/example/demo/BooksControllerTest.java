@@ -2,14 +2,16 @@ package com.example.demo;
 
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.controllers.BookController;
+import com.example.demo.exceptions.BookNotFoundException;
 import com.example.demo.integration.models.BookModel;
 import com.example.demo.service.BookService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -39,13 +41,13 @@ public class BooksControllerTest {
 	private BookService bookService;
 	
 	@Test
-	public void retrieveAllBooks_empty() throws Exception {
+	public void getBooks_empty() throws Exception {
 
 		List<BookModel> books = new ArrayList<BookModel>();
-		Mockito.when(bookService.listAllBooks()).thenReturn(books);
+		Mockito.when(bookService.listBooks(false)).thenReturn(books);
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-				"/api/v1/books");
+				"/api/v1/admin/books");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -60,27 +62,81 @@ public class BooksControllerTest {
 	
 	
 	@Test
-	public void retrieveAllUsers_noneEmpty() throws Exception {
+	public void getBooks_noneEmpty() throws Exception {
 
 		List<BookModel> books = new ArrayList<BookModel>();
 		BookModel bookModel = new BookModel();
 		bookModel.setId(1);
 		bookModel.setName("book1");
+		bookModel.setCategory("category1");
 		books.add(bookModel);
-		Mockito.when(bookService.listAllBooks()).thenReturn(books);
+		Mockito.when(bookService.listBooks(false)).thenReturn(books);
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-				"/api/v1/books");
+				"/api/v1/admin/books");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		System.out.println(result.getResponse().getContentAsString());
-		String expected = "{\"books\": [{\"id\" : 1, \"name\" : \"book1\"}] }";
+		String expected = "{\"books\": [{\"id\" : 1, \"name\" : \"book1\", \"category\":\"category1\", \"available\":false}] }";
 
 
 		
 		JSONAssert.assertEquals(expected, result.getResponse()
 				.getContentAsString(), false);
+	}
+
+	@Test
+	public void retrieveBookDetails_success() throws Exception {
+
+		BookModel bookModel = new BookModel();
+		bookModel.setId(1);
+		bookModel.setName("book1");
+		Mockito.when(bookService.getBookById(anyInt())).thenReturn(bookModel);
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+				"/api/v1/books/1");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		System.out.println(result.getResponse().getContentAsString());
+		String expected = "{\"id\" : 1, \"name\" : \"book1\"}";
+
+
+
+		JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+	}
+
+	@Test
+	public void retrieveBookDetails_notFound() throws Exception {
+
+
+		Mockito.when(bookService.getBookById(anyInt())).thenThrow(new BookNotFoundException(""));
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+				"/api/v1/books/1");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		System.out.println(result.getResponse().getContentAsString());
+		Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(404);
+	}
+
+	@Test
+	public void testAddBook_invalid() throws Exception {
+
+
+		Mockito.when(bookService.getBookById(anyInt())).thenThrow(new BookNotFoundException(""));
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post(
+				"/api/v1/admin/books").contentType(MediaType.APPLICATION_JSON)
+		 .content("{}");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		System.out.println(result.getResponse().getContentAsString());
+		Assertions.assertThat(result.getResponse().getStatus()).isEqualTo(400);
 	}
 	
 
